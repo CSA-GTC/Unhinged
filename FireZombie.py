@@ -393,7 +393,7 @@ textSurfaceObj6 = fontObj.render("PRESS SPACE TO CONTINUE OR ESCAPE TO EXIT", Tr
 textRectObj6 = textSurfaceObj6.get_rect()
 textRectObj6.center = (window_width / 2, 500)
 
-textSurfaceObj7 = fontObj.render("RESS SPACE TO START GAME, PRESS 1 TO LEARN RULES, "
+textSurfaceObj7 = fontObj.render("PRESS SPACE TO START GAME, PRESS 1 TO LEARN RULES, "
                                  "PRESS ESCAPE TO EXIT", True, WHITE)
 textRectObj7 = textSurfaceObj7.get_rect()
 textRectObj7.center = (window_width / 2, 500)
