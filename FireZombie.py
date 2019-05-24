@@ -1,3 +1,27 @@
+
+'''
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+Gregory Clarke
+Advanced Computer Programing
+5/24/2019
+
+Version 1.0
+
+'''
+
 import pygame, sys, random, math
 import pygame as pg
 from pygame.locals import *
@@ -10,6 +34,16 @@ BLACK = (0, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 128)
 RED = (255, 0, 0)
+
+try:
+    with open("scores.txt", "r") as file:
+        line = file.readline()
+
+except FileNotFoundError:
+    with open("scores.txt", "w") as file:
+        scorez = [10000, 9000, 8000, 7000, 6000, 5000, 4000, 3000, 2000, 1000]
+        for x in range(10):
+            file.write(str(scorez[x]) + "\n")
 
 
 class Entity(pygame.sprite.Sprite):
@@ -31,7 +65,7 @@ class Entity(pygame.sprite.Sprite):
 class Paddle(Entity):
     """
     Player controlled or AI controlled, main interaction with
-    the gamen
+    the game
     """
 
     def __init__(self, x, y, width, height):
@@ -219,6 +253,10 @@ class Player(Paddle):
             background.rect.x = - map_width + window_width / 2 + self.width
             hitx += 1
 
+        elif background.rect.x > window_width / 2 - self.width:
+            background.rect.x = window_width / 2 - self.width
+            hitx += 1
+
         if hity == 0:
             self.EntMoveY()
             for en in heart_list:
@@ -253,8 +291,7 @@ class Enemy(pygame.sprite.Sprite):
         # Call the parent class (Sprite) constructor
         super().__init__()
 
-
-        #self.rect = self.image.get_rect()
+        # self.rect = self.image.get_rect()
 
         num = random.randint(3, 5)
         self.y_change = num
@@ -271,14 +308,13 @@ class Enemy(pygame.sprite.Sprite):
         screen.blit(self.image, self.rect)
 
     def get_angle(self):
-        #mouse = pg.mouse.get_pos()
-        offset = (self.rect.centerx - window_width/2, self.rect.centery - window_height/2)
+        # mouse = pg.mouse.get_pos()
+        offset = (self.rect.centerx - window_width / 2, self.rect.centery - window_height / 2)
         self.angle = math.degrees(math.atan2(*offset)) - self.angle_offset
         old_center = self.rect.center
         self.image = pg.transform.rotate(self.orig_image, self.angle)
         self.rect = self.image.get_rect(center=old_center)
         self.distance = math.sqrt((offset[0] * offset[0]) + (offset[1] * offset[1]))
-
 
     def update(self):
         """
@@ -327,62 +363,54 @@ all_sprites_list.add(player)
 for x in range(25):
     enemy = Enemy()
     enemy.rect.x = random.randint(background.rect.x, background.rect.x + map_width)
-    enemy.rect.y = random.randint(background.rect.x, background.rect.x + map_height)
+    enemy.rect.y = random.randint(background.rect.y, background.rect.y + map_height)
     all_sprites_list.add(enemy)
     enemy_list.add(enemy)
 
-ammunition = 100
+font = pygame.font.SysFont('arial', 18)  # fonts
 fontObj = pygame.font.Font('freesansbold.ttf', 32)
+
+ammunition = 100
 textSurfaceObj = fontObj.render("AMMO = " + str(ammunition), True, WHITE)
 textRectObj = textSurfaceObj.get_rect()
 textRectObj.center = (1100, 50)
 
 lives = 100
-fontObj2 = pygame.font.Font('freesansbold.ttf', 32)
-textSurfaceObj2 = fontObj2.render("HEALTH = " + str(lives) + "%", True, WHITE)
+textSurfaceObj2 = fontObj.render("HEALTH = " + str(lives) + "%", True, WHITE)
 textRectObj2 = textSurfaceObj2.get_rect()
 textRectObj2.center = (window_width / 2, 50)
 
 score = 0
-fontObj3 = pygame.font.Font('freesansbold.ttf', 32)
-textSurfaceObj3 = fontObj3.render("SCORE = " + str(score), True, WHITE)
+textSurfaceObj3 = fontObj.render("SCORE = " + str(score), True, WHITE)
 textRectObj3 = textSurfaceObj3.get_rect()
 textRectObj3.center = (400, 50)
 
-fontObj4 = pygame.font.Font('freesansbold.ttf', 32)
-textSurfaceObj4 = fontObj4.render('Dodge the Fire Zombies!', True, RED)
+textSurfaceObj4 = fontObj.render('Dodge the Fire Zombies!', True, RED)
 textRectObj4 = textSurfaceObj4.get_rect()
 textRectObj4.center = (window_width / 2, 100)
 
-fontObj5 = pygame.font.Font('freesansbold.ttf', 32)
-textSurfaceObj5 = fontObj5.render('You Died!', True, RED)
-textRectObj5 = textSurfaceObj5.get_rect()
-textRectObj5.center = (window_width / 2, 100)
-
-fontObj6 = pygame.font.Font('freesansbold.ttf', 32)
-textSurfaceObj6 = fontObj6.render("Press 'SPACE' to continue or 'ESCAPE' to exit", True, WHITE)
+textSurfaceObj6 = fontObj.render("PRESS SPACE TO CONTINUE OR ESCAPE TO EXIT", True, WHITE)
 textRectObj6 = textSurfaceObj6.get_rect()
 textRectObj6.center = (window_width / 2, 500)
 
-fontObj7 = pygame.font.Font('freesansbold.ttf', 32)
-textSurfaceObj7 = fontObj7.render("Press 'SPACE' to start game, '1' to learn the rules, "
-                                  "or 'ESCAPE' to exit", True, WHITE)
+textSurfaceObj7 = fontObj.render("RESS SPACE TO START GAME, PRESS 1 TO LEARN RULES, "
+                                 "PRESS ESCAPE TO EXIT", True, WHITE)
 textRectObj7 = textSurfaceObj7.get_rect()
 textRectObj7.center = (window_width / 2, 500)
 
-fontObj8 = pygame.font.Font('freesansbold.ttf', 32)
-textSurfaceObj8 = fontObj8.render("RULES: The objective is to survive for as long as possible by shooting ", True, WHITE)
+textSurfaceObj8 = fontObj.render("RULES: The objective is to survive for as long as possible by shooting ", True, WHITE)
 textRectObj8 = textSurfaceObj8.get_rect()
 textRectObj8.center = (window_width / 2, 300)
 
-fontObj9 = pygame.font.Font('freesansbold.ttf', 32)
-textSurfaceObj9 = fontObj8.render("enemies to gain score and obtaining ammo and health consumables.", True, WHITE)
+textSurfaceObj9 = fontObj.render("enemies to gain score and obtaining ammo and health consumables.", True, WHITE)
 textRectObj9 = textSurfaceObj9.get_rect()
 textRectObj9.center = (window_width / 2, 400)
 
+death_score = 0
+newscore = 0
+
 pygame.mixer.music.load('Horde.mp3')
 pygame.mixer.music.play(-1, 0.0)
-
 
 GAME = True
 
@@ -446,13 +474,32 @@ while GAME:
 
     if RUNNING == True:
         # Event processing here
+        textSurfaceObj3 = fontObj.render("SCORE = " + str(score), True, WHITE)
+        textRectObj3 = textSurfaceObj2.get_rect()
+        textRectObj3.center = (400, 50)
+
+        textSurfaceObj = fontObj.render("AMMO = " + str(ammunition), True, WHITE)
+        textRectObj = textSurfaceObj.get_rect()
+        textRectObj.center = (1100, 50)
+
+        textSurfaceObj2 = fontObj.render("HEALTH = " + str(lives) + "%", True, WHITE)
+        textRectObj2 = textSurfaceObj2.get_rect()
+        textRectObj2.center = (window_width / 2, 50)
+
         chance = 20
+
+        if score >= 1000:
+            chance = 15
+
+        if score >= 5000:
+            chance = 10
+
         chance_to_spawn = random.randint(1, chance)
 
         if chance_to_spawn == 1:
             enemy = Enemy()
-            enemy.rect.x = random.randint(background.rect.x, background.rect.x + map_width)
-            enemy.rect.y = random.randint(background.rect.x, background.rect.x + map_height)
+            enemy.rect.x = random.randint(background.rect.x + 40, background.rect.x + map_width - 40)
+            enemy.rect.y = random.randint(background.rect.y + 40, background.rect.y + map_height - 40)
             all_sprites_list.add(enemy)
             enemy_list.add(enemy)
 
@@ -461,19 +508,19 @@ while GAME:
 
         if chance_to_spawn2 == 1:
             health = Health()
-            health.rect.x = random.randint(background.rect.x, background.rect.x + map_width)
-            health.rect.y = random.randint(background.rect.x, background.rect.x + map_height)
+            health.rect.x = random.randint(background.rect.x + 40, background.rect.x + map_width - 40)
+            health.rect.y = random.randint(background.rect.y + 40, background.rect.y + map_height - 40)
             all_sprites_list.add(health)
             heart_list.add(health)
 
         if chance_to_spawn2 == 2:
             ammo = Ammo()
-            ammo.rect.x = random.randint(background.rect.x, background.rect.x + map_width)
-            ammo.rect.y = random.randint(background.rect.x, background.rect.x + map_height)
+            ammo.rect.x = random.randint(background.rect.x + 40, background.rect.x + map_width - 40)
+            ammo.rect.y = random.randint(background.rect.y + 40, background.rect.y + map_height - 40)
             all_sprites_list.add(ammo)
             ammo_list.add(ammo)
 
-
+        # player event handling
         for event in pygame.event.get():
             mouse_pressed = pygame.mouse.get_pressed()
 
@@ -491,10 +538,6 @@ while GAME:
                 soundObj = pygame.mixer.Sound('Gunfire.wav')
                 soundObj.play()
                 ammunition -= 1
-                fontObj = pygame.font.Font('freesansbold.ttf', 32)
-                textSurfaceObj = fontObj.render("AMMO = " + str(ammunition), True, WHITE)
-                textRectObj = textSurfaceObj.get_rect()
-                textRectObj.center = (1100, 50)
                 bullet = Bullet()
 
                 bullet.rect.x = window_width / 2
@@ -512,27 +555,14 @@ while GAME:
                 all_sprites_list.remove(bullet)
 
                 score += 10
-                fontObj3 = pygame.font.Font('freesansbold.ttf', 32)
-                textSurfaceObj3 = fontObj2.render("SCORE = " + str(score), True, WHITE)
-                textRectObj3 = textSurfaceObj2.get_rect()
-                textRectObj3.center = (400, 50)
 
         player_hit_list = pygame.sprite.spritecollide(player, heart_list, True)
 
         for hit in player_hit_list:
             score += 10
-            fontObj3 = pygame.font.Font('freesansbold.ttf', 32)
-            textSurfaceObj3 = fontObj2.render("SCORE = " + str(score), True, WHITE)
-            textRectObj3 = textSurfaceObj2.get_rect()
-            textRectObj3.center = (400, 50)
-
-            lives += 25
+            lives += 12
             if lives > 100:
                 lives = 100
-            fontObj2 = pygame.font.Font('freesansbold.ttf', 32)
-            textSurfaceObj2 = fontObj2.render("HEALTH = " + str(lives) + "%", True, WHITE)
-            textRectObj2 = textSurfaceObj2.get_rect()
-            textRectObj2.center = (window_width / 2, 50)
 
             heart_list.remove(hit)
             all_sprites_list.remove(hit)
@@ -541,16 +571,11 @@ while GAME:
 
         for hit in player_hit_list:
             score += 10
-            fontObj3 = pygame.font.Font('freesansbold.ttf', 32)
-            textSurfaceObj3 = fontObj2.render("SCORE = " + str(score), True, WHITE)
-            textRectObj3 = textSurfaceObj2.get_rect()
-            textRectObj3.center = (400, 50)
 
             ammunition += 25
-            fontObj = pygame.font.Font('freesansbold.ttf', 32)
-            textSurfaceObj = fontObj.render("AMMO = " + str(ammunition), True, WHITE)
-            textRectObj = textSurfaceObj.get_rect()
-            textRectObj.center = (1100, 50)
+
+            if ammunition > 100:
+                ammunition = 100
 
             ammo_list.remove(hit)
             all_sprites_list.remove(hit)
@@ -567,14 +592,11 @@ while GAME:
 
         for hit in player_hit_list:
             lives -= 3
-            fontObj2 = pygame.font.Font('freesansbold.ttf', 32)
-            textSurfaceObj2 = fontObj2.render("HEALTH = " + str(lives) + "%", True, WHITE)
-            textRectObj2 = textSurfaceObj2.get_rect()
-            textRectObj2.center = (window_width / 2, 50)
             enemy_list.remove(hit)
             all_sprites_list.remove(hit)
 
         if lives <= 0:
+            death_score = score
             for x in all_sprites_list:
                 x.kill()
 
@@ -584,7 +606,18 @@ while GAME:
             for x in enemy_list:
                 x.kill()
 
-            ammo = 100
+            for x in ammo_list:
+                x.kill()
+
+            for x in heart_list:
+                x.kill()
+
+            mouse_pressed = pygame.mouse.get_pressed()
+
+            if event.type == pygame.KEYDOWN:
+                player.MoveKeyUp(event.key)
+
+            ammunition = 100
             score = 0
             lives = 100
 
@@ -597,7 +630,7 @@ while GAME:
             for x in range(25):
                 enemy = Enemy()
                 enemy.rect.x = random.randint(background.rect.x, background.rect.x + map_width)
-                enemy.rect.y = random.randint(background.rect.x, background.rect.x + map_height)
+                enemy.rect.y = random.randint(background.rect.y, background.rect.y + map_height)
                 all_sprites_list.add(enemy)
                 enemy_list.add(enemy)
 
@@ -621,9 +654,115 @@ while GAME:
     if DEATH == True:
         screen.fill(BLACK)
 
-        screen.blit(textSurfaceObj5, textRectObj5)
-        screen.blit(textSurfaceObj3, (650, 300))
-        screen.blit(textSurfaceObj6, textRectObj6)
+        total = death_score
+        points = fontObj.render(str("POINTS: " + str(death_score)), True, WHITE)  # shows score
+        scorerect = points.get_rect()
+        scorerect.center = (window_width / 2, 50)
+        screen.blit(points, scorerect)
+        textsurface = fontObj.render(str("You died!"), True, WHITE)
+        textrect = textsurface.get_rect()
+        textrect.center = (window_width / 2, 100)
+        screen.blit(textsurface, textrect)
+
+        file = open("scores.txt", "r")
+        y = file.readline()
+        scores = []
+        while y:  # checks for high scores
+            if int(death_score) > int(y) and newscore == 0:
+                scores.append(death_score)
+                scores.append("\n")
+                newscore = 1
+                y = file.readline()
+            else:
+                scores.append(y)
+                y = file.readline()
+
+        file.close()
+        files = open("scores.txt", "w")  # rewrites scores to file
+        for z in scores:
+            files.write(str(z))
+        files.close()
+
+        if newscore == 1:  # if user has high score then print
+            new = fontObj.render(str("NEW HIGHSCORE!"), True, WHITE)
+            newbox = new.get_rect()
+            newbox.center = (window_width / 2, 150)
+            screen.blit(new, newbox)
+
+        file = open("scores.txt", "r")
+        label = "HIGHSCORES"
+        line = file.readlines()
+        leave = "PRESS SPACE TO RETURN TO HOME SCREEN"
+        file.close()
+        positions = [(window_width / 2, 250),
+                     (window_width / 2, 300), (window_width / 2, 350), (window_width / 2, 400),
+                     (window_width / 2, 450), (window_width / 2, 500), (window_width / 2, 550),
+                     (window_width / 2, 600), (window_width / 2, 650), (window_width / 2, 700),
+                     (window_width / 2, 750)]
+
+        textsurface1 = fontObj.render(label, True, WHITE)
+        textrect1 = textsurface1.get_rect()
+        textrect1.center = (window_width / 2, 200)
+
+        line = [SCORE.replace('\n', '') for SCORE in line]
+
+        textsurface2 = fontObj.render(str("1.  " + line[0]), True, WHITE)  # shows top 10 scores
+        textrect2 = textsurface2.get_rect()
+        textrect2.center = positions[0]
+
+        textsurface3 = fontObj.render(str("2.  " + line[1]), True, WHITE)
+        textrect3 = textsurface3.get_rect()
+        textrect3.center = positions[1]
+
+        textsurface4 = fontObj.render(str("3.  " + line[2]), True, WHITE)
+        textrect4 = textsurface4.get_rect()
+        textrect4.center = positions[2]
+
+        textsurface5 = fontObj.render(str("4.  " + line[3]), True, WHITE)
+        textrect5 = textsurface5.get_rect()
+        textrect5.center = positions[3]
+
+        textsurface6 = fontObj.render(str("5.  " + line[4]), True, WHITE)
+        textrect6 = textsurface6.get_rect()
+        textrect6.center = positions[4]
+
+        textsurface7 = fontObj.render(str("6.  " + line[5]), True, WHITE)
+        textrect7 = textsurface7.get_rect()
+        textrect7.center = positions[5]
+
+        textsurface8 = fontObj.render(str("7.  " + line[6]), True, WHITE)
+        textrect8 = textsurface8.get_rect()
+        textrect8.center = positions[6]
+
+        textsurface9 = fontObj.render(str("8.  " + line[7]), True, WHITE)
+        textrect9 = textsurface9.get_rect()
+        textrect9.center = positions[7]
+
+        textsurface10 = fontObj.render(str("9.  " + line[8]), True, WHITE)
+        textrect10 = textsurface10.get_rect()
+        textrect10.center = positions[8]
+
+        textsurface11 = fontObj.render(str("10.  " + line[9]), True, WHITE)
+        textrect11 = textsurface11.get_rect()
+        textrect11.center = positions[9]
+
+        textsurface12 = fontObj.render(leave, True, WHITE)
+        textrect12 = textsurface12.get_rect()
+        textrect12.center = positions[10]
+
+        screen.blit(textsurface1, textrect1)
+        screen.blit(textsurface2, textrect2)
+        screen.blit(textsurface3, textrect3)
+        screen.blit(textsurface4, textrect4)
+        screen.blit(textsurface5, textrect5)
+        screen.blit(textsurface6, textrect6)
+        screen.blit(textsurface7, textrect7)
+        screen.blit(textsurface8, textrect8)
+        screen.blit(textsurface9, textrect9)
+        screen.blit(textsurface10, textrect10)
+        screen.blit(textsurface11, textrect11)
+        screen.blit(textsurface12, textrect12)
+        pygame.display.flip()
 
         for event in pygame.event.get():
 
@@ -634,6 +773,8 @@ while GAME:
 
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
+                    newscore = 0
+                    death_score = 0
                     score = 0
                     DEATH = False
                     START = True
