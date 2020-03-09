@@ -475,7 +475,6 @@ RightKeyPos.center = (window_width * .8, 50)
 
 
 homescreen = pygame.image.load("TitleScreen.png").convert_alpha()
-homescreenExit = pygame.image.load("ExitSelected.png").convert_alpha()
 exposition = pygame.image.load("Exposition.png").convert_alpha()
 loading = pygame.image.load("LoadingScreen.png").convert_alpha()
 pausescreen = pygame.image.load("PauseMenu.png").convert_alpha()
