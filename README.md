@@ -12,6 +12,6 @@ In addition to these problems, things to add in the future are:
     * Points/Time survived
     * Sound
 
-Thank you for playing and please not any other issues you find
+Thank you for playing and please note any other issues you find
  
    
