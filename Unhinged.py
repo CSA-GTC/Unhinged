@@ -124,6 +124,7 @@ class Background(pygame.sprite.Sprite):
     def __init__(self, map_type):
         super().__init__()
         self.map_type = map_type
+        self.state = 0
         self.image = pygame.image.load(map_type+".png").convert_alpha()
 
         self.rect = self.image.get_rect()
@@ -197,228 +198,112 @@ class Player(Paddle):
         elif key == pygame.K_a:
             self.x_change += self.x_dist
 
-    def Y_Move(self):
-
-        for ting in background_list:
-            if ting != Main:
-                ting.rect.move_ip(0, -self.y_change)
-
-        # for ting in path_list:
-        #     # if ting != Main:
-        #     ting.rect.move_ip(0, -self.y_change)
-
-    def X_Move(self):
-
-        for ting in background_list:
-            if ting != Main:
-                ting.rect.move_ip(-self.x_change, 0)
-
-        # for ting in path_list:
-        #     # if ting != Main:
-        #     ting.rect.move_ip(-self.x_change, 0)
-
-
     def Borders(self):
-        hity = 0
-        hitx = 0
 
-        Main.rect.move_ip(-self.x_change, -self.y_change)
+        for thing in background_list:
+            thing.rect.move_ip(-self.x_change, -self.y_change)
 
         if Main == UP:
 
-            # if Main.rect.y < - map_height / 2 + window_height / 2 - Buffer:
-            #     Main.rect.y = - map_height / 2 + window_height / 2 - Buffer
-            #     item.rect.y = - map_height / 2 + window_height / 2 - Buffer
-            #     hity += 1
-            #
-            # if Main.rect.x < - map_width / 2 + window_width / 2 - Buffer:
-            #     Main.rect.x = - map_width / 2 + window_width / 2 - Buffer
-            #     Main.rect.x = - map_width / 2 + window_width / 2 - Buffer
-            #     hitx += 1
-            #
-            # elif Main.rect.x > - map_width / 2 + window_width / 2 + Buffer:
-            #     item.rect.x = - map_width / 2 + window_width / 2 + Buffer
-            #     hitx += 1
+            if Main.rect.y < - map_height / 2 + window_height / 2 - Buffer:
+                Main.state = 1
 
-            if hitx == 0:
-                self.X_Move()
+            if Main.rect.x < - map_width / 2 + window_width / 2 - Buffer:
+                Main.state = 1
 
-            if hity == 0:
-                self.Y_Move()
+            elif Main.rect.x > - map_width / 2 + window_width / 2 + Buffer:
+                Main.state = 1
 
         if Main == DOWN:
 
-            # if Main.rect.y > - map_height / 2 + window_height / 2 + Buffer:
-            #     Main.rect.y = - map_height / 2 + window_height / 2 + Buffer
-            #     hity += 1
-            #
-            # if Main.rect.x < - map_width / 2 + window_width / 2 - Buffer:
-            #     Main.rect.x = - map_width / 2 + window_width / 2 - Buffer
-            #     hitx += 1
-            #
-            # elif Main.rect.x >= - map_width / 2 + window_width / 2 + Buffer:
-            #     Main.rect.x = - map_width / 2 + window_width / 2 + Buffer
-            #     hitx += 1
+            if Main.rect.y > - map_height / 2 + window_height / 2 + Buffer:
+                Main.state = 1
 
-            if hitx == 0:
-                self.X_Move()
+            if Main.rect.x < - map_width / 2 + window_width / 2 - Buffer:
+                Main.state = 1
 
-            if hity == 0:
-                self.Y_Move()
+            elif Main.rect.x >= - map_width / 2 + window_width / 2 + Buffer:
+                Main.state = 1
 
         if Main == LEFT:
 
-            # if Main.rect.y < - map_height / 2 + window_height / 2 - Buffer:
-            #     Main.rect.y = - map_height / 2 + window_height / 2 - Buffer
-            #     hity += 1
-            #
-            # elif Main.rect.y > - map_height / 2 + window_height / 2 + Buffer:
-            #     Main.rect.y = - map_height / 2 + window_height / 2 + Buffer
-            #     hity += 1
-            #
-            # if Main.rect.x < - map_width / 2 + window_width / 2 - Buffer:
-            #     Main.rect.x = - map_width / 2 + window_width / 2 - Buffer
-            #     hitx += 1
+            if Main.rect.y < - map_height / 2 + window_height / 2 - Buffer:
+                Main.state = 1
 
-            if hitx == 0:
-                self.X_Move()
+            elif Main.rect.y > - map_height / 2 + window_height / 2 + Buffer:
+                Main.state = 1
 
-            if hity == 0:
-                self.Y_Move()
+            if Main.rect.x < - map_width / 2 + window_width / 2 - Buffer:
+                Main.state = 1
 
         if Main == RIGHT:
 
-            # if Main.rect.y < - map_height / 2 + window_height / 2 - Buffer:
-            #     Main.rect.y = - map_height / 2 + window_height / 2 - Buffer
-            #     hity += 1
-            #
-            # elif Main.rect.y > - map_height / 2 + window_height / 2 + Buffer:
-            #     Main.rect.y = - map_height / 2 + window_height / 2 + Buffer
-            #     hity += 1
-            #
-            # if Main.rect.x > - map_width / 2 + window_width / 2 + Buffer:
-            #     Main.rect.x = - map_width / 2 + window_width / 2 + Buffer
-            #     hitx += 1
+            if Main.rect.y < - map_height / 2 + window_height / 2 - Buffer:
+                Main.state = 1
 
-            if hitx == 0:
-                self.X_Move()
+            elif Main.rect.y > - map_height / 2 + window_height / 2 + Buffer:
+                Main.state = 1
 
-            if hity == 0:
-                self.Y_Move()
+            if Main.rect.x > - map_width / 2 + window_width / 2 + Buffer:
+                Main.state = 1
 
         if Main == RIGHT_UP:
 
-            # if Main.rect.y < - map_height / 2 + window_height / 2 - Buffer:
-            #     Main.rect.y = - map_height / 2 + window_height / 2 - Buffer  # Bottom Y and Left X
-            #     hity += 1
-            #
-            # if Main.rect.y > - map_height / 2 + window_height / 2 + Buffer:
-            #     if Main.rect.x < - map_width / 2 + window_width / 2 - Buffer:
-            #         if Main.rect.x - map_width / 2 + window_width / 2 - Buffer:
-            #             Main.rect.y = - map_height / 2 + window_height / 2 + Buffer  # Top Y and Right X
-            #             hity += 1
-            #
-            #         if Main.rect.y > - map_height / 2 + window_height / 2 + Buffer + 20:
-            #             Main.rect.x = - map_width / 2 + window_width / 2 - Buffer  # Right X
-            #             hitx += 1
-            #
-            # if Main.rect.x > - map_width / 2 + window_width / 2 + Buffer:
-            #     Main.rect.x = - map_width / 2 + window_width / 2 + Buffer  # Left X
-            #     hitx += 1
+            if Main.rect.y < - map_height / 2 + window_height / 2 - Buffer:
+                Main.state = 1
 
-            if hitx == 0:
-                self.X_Move()
+            if Main.rect.y > - map_height / 2 + window_height / 2 + Buffer:
+                if Main.rect.x < - map_width / 2 + window_width / 2 - Buffer:
+                    Main.state = 1
 
-            if hity == 0:
-                self.Y_Move()
+            if Main.rect.x > - map_width / 2 + window_width / 2 + Buffer:
+                Main.state = 1
 
         if Main == LEFT_UP:
-            # XD = - 625 - Main.rect.x
-            # YD = - 1008 - Main.rect.y
-            #
-            # if Main.rect.y < - map_height / 2 + window_height / 2 - Buffer:
-            #     Main.rect.y = - map_height / 2 + window_height / 2 - Buffer
-            #     hity += 1
-            #
-            # if Main.rect.y > - map_height / 2 + window_height / 2 + Buffer:
-            #     if Main.rect.x > - map_width / 2 + window_width / 2 + Buffer:
-            #         if YD >= XD:
-            #             Main.rect.y = - map_height / 2 + window_height / 2 + Buffer
-            #             hity += 1
-            #
-            #         if XD > YD:
-            #             Main.rect.x = - map_width / 2 + window_width / 2 + Buffer
-            #             hitx += 1
-            #
-            #         # if YD == XD:
-            #         #     Main.rect.x = - map_width / 2 + window_width / 2 + Buffer
-            #         #     Main.rect.y = - map_height / 2 + window_height / 2 + Buffer
-            #         #     hitx += 1
-            #         #     hity += 1
-            #
-            # elif Main.rect.x < - map_width / 2 + window_width / 2 - Buffer:
-            #     Main.rect.x = - map_width / 2 + window_width / 2 - Buffer  # Left X
-            #     hitx += 1
 
-            if hitx == 0:
-                self.X_Move()
+            if Main.rect.y < - map_height / 2 + window_height / 2 - Buffer:
+                Main.state = 1
 
-            if hity == 0:
-                self.Y_Move()
+            if Main.rect.y > - map_height / 2 + window_height / 2 + Buffer:
+                if Main.rect.x > - map_width / 2 + window_width / 2 + Buffer:
+                    Main.state = 1
+
+            elif Main.rect.x < - map_width / 2 + window_width / 2 - Buffer:
+                Main.state = 1
 
         if Main == RIGHT_DOWN:
 
-            # if Main.rect.y < - map_height / 2 + window_height / 2 - Buffer \
-            #         and - map_width / 2 + window_width / 2 - Buffer - player_width > Main.rect.x:
-            #     Main.rect.y = - map_height / 2 + window_height / 2 - Buffer  # Bottom Y and Left X
-            #     hity += 1
-            #
-            # elif Main.rect.y > - map_height / 2 + window_height / 2 + Buffer \
-            #         and Main.rect.x < - map_width / 2 + window_width / 2 + Buffer + player_width:
-            #     Main.rect.y = - map_height / 2 + window_height / 2 + Buffer  # Top Y and Right X
-            #     hity += 1
-            #
-            # if Main.rect.x < - map_width / 2 + window_width / 2 - Buffer \
-            #         and Main.rect.y < - map_height / 2 + window_height / 2 - Buffer:
-            #     Main.rect.x = - map_width / 2 + window_width / 2 - Buffer  # Right X
-            #     hitx += 1
-            #
-            # elif Main.rect.x > - map_width / 2 + window_width / 2 + Buffer:
-            #     Main.rect.x = - map_width / 2 + window_width / 2 + Buffer  # Left X
-            #     hitx += 1
+            if Main.rect.y < - map_height / 2 + window_height / 2 - Buffer \
+                    and - map_width / 2 + window_width / 2 - Buffer - player_width > Main.rect.x:
+                Main.state = 1
 
-            if hitx == 0:
-                self.X_Move()
+            elif Main.rect.y > - map_height / 2 + window_height / 2 + Buffer \
+                    and Main.rect.x < - map_width / 2 + window_width / 2 + Buffer + player_width:
+                Main.state = 1
 
-            if hity == 0:
-                self.Y_Move()
+            if Main.rect.x < - map_width / 2 + window_width / 2 - Buffer \
+                    and Main.rect.y < - map_height / 2 + window_height / 2 - Buffer:
+                Main.state = 1
+
+            elif Main.rect.x > - map_width / 2 + window_width / 2 + Buffer:
+                Main.state = 1
 
         if Main == LEFT_DOWN:
 
-            # if Main.rect.y > - map_height / 2 + window_height / 2 + Buffer \
-            #         and - map_width / 2 + window_width / 2 - Buffer - player_width < Main.rect.x:
-            #     Main.rect.y = - map_height / 2 + window_height / 2 + Buffer  # Bottom Y and Left X
-            #     hity += 1
-            #
-            # elif Main.rect.y < - map_height / 2 + window_height / 2 - Buffer \
-            #         and Main.rect.x > - map_width / 2 + window_width / 2 + Buffer + player_width:
-            #     Main.rect.y = - map_height / 2 + window_height / 2 - Buffer  # Top Y and Right X
-            #     hity += 1
-            #
-            # if Main.rect.x > - map_width / 2 + window_width / 2 + Buffer \
-            #         and Main.rect.y < - map_height / 2 + window_height / 2 - Buffer:
-            #     Main.rect.x = - map_width / 2 + window_width / 2 + Buffer  # Right X
-            #     hitx += 1
-            #
-            # elif Main.rect.x < - map_width / 2 + window_width / 2 - Buffer:
-            #     Main.rect.x = - map_width / 2 + window_width / 2 - Buffer  # Left X
-            #     hitx += 1
+            if Main.rect.y > - map_height / 2 + window_height / 2 + Buffer \
+                    and - map_width / 2 + window_width / 2 - Buffer - player_width < Main.rect.x:
+                Main.state = 1
 
-            if hitx == 0:
-                self.X_Move()
+            elif Main.rect.y < - map_height / 2 + window_height / 2 - Buffer \
+                    and Main.rect.x > - map_width / 2 + window_width / 2 + Buffer + player_width:
+                Main.state = 1
 
-            if hity == 0:
-                self.Y_Move()
+            if Main.rect.x > - map_width / 2 + window_width / 2 + Buffer \
+                    and Main.rect.y < - map_height / 2 + window_height / 2 - Buffer:
+                Main.state = 1
+
+            elif Main.rect.x < - map_width / 2 + window_width / 2 - Buffer:
+                Main.state = 1
 
     def update(self):
         self.Borders()
@@ -473,7 +358,6 @@ RightKey = fontObj.render("Right = " + RightVar, True, WHITE)
 RightKeyPos = UpKey.get_rect()
 RightKeyPos.center = (window_width * .8, 50)
 
-
 homescreen = pygame.image.load("TitleScreen.png").convert_alpha()
 exposition = pygame.image.load("Exposition.png").convert_alpha()
 loading = pygame.image.load("LoadingScreen.png").convert_alpha()
@@ -483,10 +367,13 @@ ExitToMenu = pygame.image.load("ExitToMenu.png").convert_alpha()
 Menu = pygame.image.load("MainMenu.png").convert_alpha()
 Start = pygame.image.load("StartSelect.png").convert_alpha()
 Quit = pygame.image.load("QuitSelect.png").convert_alpha()
+Death = pygame.image.load("DeathScreen.png").convert_alpha()
+Instruct = pygame.image.load("Instructions.png").convert_alpha()
 
 First_Var = 0
 PreDir = "UP"
 Buffer = 160
+start_var = 0
 
 """
 pygame.mixer.music.load('Horde.mp3')
@@ -637,7 +524,6 @@ while GAME:
 
             Main.rect.move_ip(-(map_width / 2 - window_width / 2), -(map_height / 2 - window_height / 2))
 
-            #path.rect.move_ip(Main.rect.x - map_width / 2 + window_width / 2 + Buffer, Main.rect.y - 1000)
             # Initial Map Creation
 
             if Main == backgroundUP:
@@ -651,14 +537,12 @@ while GAME:
                     Next = backgroundLEFT_DOWN
                     Next.rect.move_ip(Main.rect.x, Main.rect.y - map_height)
 
-
             if Main == backgroundDOWN:
                 PreDir = "DOWN"
                 chance = random.randint(1, 2)
                 if chance == 1:
                     Next = backgroundRIGHT_UP
                     Next.rect.move_ip(Main.rect.x, Main.rect.y + map_height)
-
 
                 if chance == 2:
                     Next = backgroundLEFT_UP
@@ -682,7 +566,6 @@ while GAME:
                     Next = backgroundLEFT_DOWN
                     Next.rect.move_ip(Main.rect.x + map_width, Main.rect.y)
 
-
                 if chance == 2:
                     Next = backgroundLEFT_UP
                     Next.rect.move_ip(Main.rect.x + map_width, Main.rect.y)
@@ -692,8 +575,6 @@ while GAME:
             background_list.add(Main)
             all_sprites_list.add(Next)
             background_list.add(Next)
-            #all_sprites_list.add(path)
-            #path_list.add(path)
             all_sprites_list.add(player)
 
             # UPBUTTON = pygame.K_w
@@ -913,6 +794,7 @@ while GAME:
                 sys.exit()
 
             elif event.type == pygame.KEYDOWN:
+                start_var = 1
                 player.MoveKeyDown(event.key)  #, hitx, hity)
 
                 if event.key == pygame.K_ESCAPE:
@@ -924,17 +806,23 @@ while GAME:
             elif event.type == pygame.KEYUP:
                 player.MoveKeyUp(event.key)
 
+        if Main.state == 1:
+            ENDLESS = False
+            DEATH = True
+
         screen.fill((0, 0, 0))
         for ent in all_sprites_list:
             ent.update()
 
         all_sprites_list.draw(screen)
-
         screen.blit(UpKey, UpKeyPos)
         screen.blit(DownKey, DownKeyPos)
         screen.blit(LeftKey, LeftKeyPos)
         screen.blit(RightKey, RightKeyPos)
         screen.blit(ExitKey, ExitKeyPos)
+
+        if start_var == 0:
+            screen.blit(Instruct, (0, 0))
 
         pygame.display.update()
         pygame.display.flip()
@@ -996,6 +884,7 @@ while GAME:
                         x.kill()
 
                     First_Var = 0
+                    start_var = 0
 
                     PAUSE = False
                     HOME = True
@@ -1013,7 +902,16 @@ while GAME:
             pygame.display.update()
 
     if DEATH == True:
-        screen.fill(BLACK)
+
+        screen.blit(Death, (0, 0))
+        for x in all_sprites_list:
+            x.kill()
+
+        for x in background_list:
+            x.kill()
+
+        First_Var = 0
+        start_var = 0
 
         for event in pygame.event.get():
 
@@ -1024,9 +922,6 @@ while GAME:
 
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
-                    newscore = 0
-                    death_score = 0
-                    score = 0
                     DEATH = False
                     HOME = True
 
